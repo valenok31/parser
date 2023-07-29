@@ -23,9 +23,10 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
             slowMo: 100,
             devtools: true
         })
-        randomUseragent.getRandom();
+        //randomUseragent.getRandom();
         let page = await browser.newPage();
-        await page.setUserAgent(userAgent.random().toString())
+        //await page.setUserAgent(userAgent.random().toString())
+        await page.setUserAgent(randomUseragent.getRandom())
         await page.setViewport({
             width: 1400, height: 900
         })
