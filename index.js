@@ -1,6 +1,6 @@
-const userAgent = require('user-agents');
+//const userAgent = require('user-agents');
 const randomUseragent = require('random-useragent');
-const fs = require('fs');
+//const fs = require('fs');
 const puppeteer = require('puppeteer-extra');
 const XLSX = require('xlsx');
 
@@ -17,81 +17,56 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
 (async () => {
     let flag = true;
     let res = [];
-    let counter = 0;
+    let counter = 1;
     try {
         let browser = await puppeteer.launch({
             headless: false,
-            slowMo: 100,
+            //slowMo: 100,
             devtools: true
         })
-        //randomUseragent.getRandom();
+
         let page = await browser.newPage();
-        //await page.setUserAgent(userAgent.random().toString())
         await page.setUserAgent(randomUseragent.getRandom())
         await page.setViewport({
             width: 1400, height: 900
         })
         while (flag) {
             await page.goto(`${link}${counter}`);
-            //await page.waitForSelector('a.pagination-widget__page-link_next').then(() => {
             await page.waitForSelector('a.catalog-product__image-link').then(async () => {
                 console.log('SUCCESS');
-
-
-                /*   1    */
-
                 console.log(counter);
                 let html = await page.evaluate(async () => {
+                    console.log('evaluate');
                     let page = [];
-                    try {
-                        let divs = document.querySelectorAll('div.ui-button-widget');
-                        divs.forEach(div => {
-                            let a = div.querySelector('a.ui-link')
-                            let obj = {
-                                title: a.innerText,
-                                link: a.href,
-                                price: div.querySelector('div.product-buy__price').innerText
-                            }
-                            page.push(obj);
-                        })
-                    } catch (e) {
-                        console.log(e);
-                    } finally {
-                        console.log('finally')
-                    }
+                    let divs = document.querySelectorAll('div.ui-button-widget');
+                    divs.forEach(div => {
+                        let a = div.querySelector('a.ui-link');
+                        let title = a.innerText.split('[');
+                        let obj = {
+                            title: title[0],
+                            description: title[1].slice(0, -1),
+                            link: a.href,
+                            price: div.querySelector('div.product-buy__price').innerText
+                        }
+                        page.push(obj);
+                    })
                     return page;
-                    //}, {waitUntil: 'a.pagination-widget__page-link_next'});
-                }, {waitUntil: 'networkidle0'});
-                await res.push(html);
+                }, {waitUntil: 'load'});
+                res = res.concat(html);
                 counter++
                 console.log(html)
                 if (counter > 5) {
                     flag = false
-                    // array of objects to save in Excel
-                    //let binaryUnivers = [{'name': 'Hi','value':1},{'name':'Bye','value':0}]
-                    let binaryWS = XLSX.utils.json_to_sheet(html);
-                    // Create a new Workbook
+                    let binaryWS = XLSX.utils.json_to_sheet(res);
                     let wb = XLSX.utils.book_new()
-                    // Name your sheet
-                    XLSX.utils.book_append_sheet(wb, binaryWS, 'Binary values')
-                    // export your excel
-                    XLSX.writeFile(wb, 'Binaire.xlsx');
+                    XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
+                    XLSX.writeFile(wb, 'DNS_shop.xlsx');
                 }
-
-                /*   -1    */
-
-
             }).catch(e => {
                 console.log('FAIL');
             });
-
-            /*  1 - 1    */
-
         }
-
         console.log(res)
-
-
     } catch (e) {
         console.log(e);
         await browser.close()
