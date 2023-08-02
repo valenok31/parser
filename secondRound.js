@@ -15,7 +15,7 @@ puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
 
 (async () => {
-    let flag = 2;
+    let flag = 3;
     let res = [];
     let counter = 0;
     let arrSecondRound = ['https://www.dns-shop.ru/product/e85a7fbcf8c1c823/141-noutbuk-irbis-nb248-cernyj/',
@@ -40,7 +40,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
         await page.goto(`${arrSecondRound[counter]}`);
         // let tiser = document.querySelector('div.product-card-description-text').innerText;
         //console.log(tiser);
-        await page.waitForSelector('div.product-card-description-text', {timeout: 5000})
+        await page.waitForSelector('img.product-images-slider__main-img', {timeout: 5000})
             .then(async () => {
                 console.log('SUCCESS');
                 console.log(counter);
@@ -50,7 +50,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
                     let specs = document.querySelector('div.product-card-top__specs').innerText;
                     let price = document.querySelector('div.product-buy__price').innerText;
                     let description = document.querySelector('div.product-card-description-text').innerText;
-                    let link = arrSecondRound[counter];
+                    //let link = arrSecondRound[counter];
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
 
                     //let a = divs.querySelector('div.product-card-description-text');
@@ -60,7 +60,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
                         specs: specs,
                         price: price,
                         description: description,
-                        link: link,
+                        //link: link,
                         mainImg: mainImg,
                     }
                     page.push(obj);

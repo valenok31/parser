@@ -20,7 +20,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
 (async () => {
     let flag = 2;
     let res = [];
-    let counter = 25;
+    let counter = 26;
 
     let browser = await puppeteer.launch({
         headless: false,
@@ -89,42 +89,50 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
 
 
 let double = async (arrSecondRounds) => {
-    let flag = true;
+
+    let flag = 3;
     let res = [];
     let counter = 0;
-    let arrSecondRound = arrSecondRounds;
+    let arrSecondRound = arrSecondRounds
 
 
-    try {
-        let browser = await puppeteer.launch({
-            headless: false,
-            //slowMo: 100,
-            //devtools: true
-        })
+    let browser = await puppeteer.launch({
+        headless: false,
+        //slowMo: 100,
+        //devtools: true
+    })
 
-        let page = await browser.newPage();
-        await page.setUserAgent(randomUseragent.getRandom())
-        await page.setViewport({
-            width: 1400, height: 900
-        })
-        while (flag) {
-            await page.goto(`${arrSecondRound[counter]}`);
-            // let tiser = document.querySelector('div.product-card-description-text').innerText;
-            //console.log(tiser);
-            await page.waitForSelector('div.product-card-description-text').then(async () => {
+    let page = await browser.newPage();
+    await page.setUserAgent(randomUseragent.getRandom())
+    await page.setViewport({
+        width: 1400, height: 900
+    })
+    while (!!flag) {
+        await page.goto(`${arrSecondRound[counter]}`);
+        // let tiser = document.querySelector('div.product-card-description-text').innerText;
+        //console.log(tiser);
+        await page.waitForSelector('div.product-card-description-text', {timeout: 5000})
+            .then(async () => {
                 console.log('SUCCESS');
                 console.log(counter);
-                // let tiser = document.querySelector('div.product-card-description-text').innerText;
-                // console.log(tiser);
                 let html = await page.evaluate(async () => {
-                    console.log('evaluate');
                     let page = [];
-                    let divs = document.querySelector('div.product-card-description-text').innerText;
+                    let name = document.querySelector('h1.product-card-top__title').innerText;
+                    let specs = document.querySelector('div.product-card-top__specs').innerText;
+                    let price = document.querySelector('div.product-buy__price').innerText;
+                    let description = document.querySelector('div.product-card-description-text').innerText;
+                    //let link = arrSecondRound[counter];
+                    let mainImg = document.querySelector('img.product-images-slider__main-img').src;
 
                     //let a = divs.querySelector('div.product-card-description-text');
                     //let title = divs.innerText;
                     let obj = {
-                        title: divs,
+                        name: name,
+                        specs: specs,
+                        price: price,
+                        description: description,
+                        //link: link,
+                        mainImg: mainImg,
                     }
                     page.push(obj);
 
@@ -134,21 +142,25 @@ let double = async (arrSecondRounds) => {
                 //res.push(html);
                 counter++;
                 //console.log(res)
-                if (counter > 3) {
-                    flag = false
-                    let binaryWS = XLSX.utils.json_to_sheet(res);
-                    let wb = XLSX.utils.book_new()
-                    XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
-                    XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
-
+                if (arrSecondRound.length == counter || counter == 10) {
+                    flag = 0
                 }
+
+
+
+
             }).catch(e => {
-                console.log('FAIL');
+                flag--;
+                console.log('FALSE = ' + flag);
             });
-        }
-        console.log(res)
-    } catch (e) {
-        console.log(e);
-        await browser.close()
     }
+
+    let binaryWS = XLSX.utils.json_to_sheet(res);
+    let wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
+    XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
+
+    console.log(res)
+    await browser.close()
+
 };
