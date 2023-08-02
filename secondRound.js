@@ -39,37 +39,38 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
         })
         while (flag) {
             await page.goto(`${arrSecondRound[counter]}`);
-            let tiser = document.querySelector('div.product-card-description-text').innerText;
-            console.log(tiser);
-            await page.waitForSelector('a.navmenu__submenu-link').then(async () => {
+           // let tiser = document.querySelector('div.product-card-description-text').innerText;
+            //console.log(tiser);
+            await page.waitForSelector('div.product-card-description-text').then(async () => {
                 console.log('SUCCESS');
                 console.log(counter);
                // let tiser = document.querySelector('div.product-card-description-text').innerText;
                // console.log(tiser);
-/*                let html = await page.evaluate(async () => {
+                let html = await page.evaluate(async () => {
                     console.log('evaluate');
                     let page = [];
                     let divs = document.querySelector('div.product-card-description-text').innerText;
 
                     //let a = divs.querySelector('div.product-card-description-text');
-                    let title = divs.innerText;
+                    //let title = divs.innerText;
                     let obj = {
                         title: divs,
                     }
                     page.push(obj);
 
                     return page;
-                }, {waitUntil: 'load'});*/
-                //res = res.concat(tiser);
-                //res = res.push(tiser);
-                counter++
-                //console.log(tiser)
+                }, {waitUntil: 'load'});
+                res = res.concat(html);
+                //res.push(html);
+                counter++;
+                //console.log(res)
                 if (counter > 3) {
                     flag = false
                     let binaryWS = XLSX.utils.json_to_sheet(res);
                     let wb = XLSX.utils.book_new()
                     XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
                     XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
+
                 }
             }).catch(e => {
                 console.log('FAIL');
