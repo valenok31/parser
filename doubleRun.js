@@ -167,14 +167,15 @@ let double = async (arrSecondRounds) => {
 };
 
 
-let arrSecondRound = ['https://www.dns-shop.ru/product/e85a7fbcf8c1c823/141-noutbuk-irbis-nb248-cernyj/',
-    'https://www.dns-shop.ru/product/a9069bce37c6ed20/141-noutbuk-dexp-aquilon-serebristyj/',
-    'https://www.dns-shop.ru/product/e259ba0deda12ff2/14-noutbuk-irbis-nb257-seryj/',
-    'https://www.dns-shop.ru/product/9e7bf670f0052065/14-noutbuk-irbis-nb283-seryj/',
-    'https://www.dns-shop.ru/product/5b988b0337c5ed20/141-noutbuk-dexp-aquilon-serebristyj/']
+
 
 
 (async () => {
-   await double(arrSecondRound);
+    let arrSecondRound = ['https://www.dns-shop.ru/product/e85a7fbcf8c1c823/141-noutbuk-irbis-nb248-cernyj/',
+        'https://www.dns-shop.ru/product/a9069bce37c6ed20/141-noutbuk-dexp-aquilon-serebristyj/',
+        'https://www.dns-shop.ru/product/e259ba0deda12ff2/14-noutbuk-irbis-nb257-seryj/',
+        'https://www.dns-shop.ru/product/9e7bf670f0052065/14-noutbuk-irbis-nb283-seryj/',
+        'https://www.dns-shop.ru/product/5b988b0337c5ed20/141-noutbuk-dexp-aquilon-serebristyj/'];
 
-})()
+   await double(arrSecondRound);
+})();
