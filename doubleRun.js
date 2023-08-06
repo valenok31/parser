@@ -147,11 +147,8 @@ let double = async (arrSecondRounds) => {
                     flag = 0
                 }
 
-
-
-
             }).catch(e => {
-                flag--;
+                //flag--;
                 console.log('FALSE = ' + flag);
             });
     }
