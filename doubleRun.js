@@ -132,7 +132,7 @@ let double = async (arrSecondRounds) => {
                         specs: specs,
                         price: price,
                         description: description,
-                        //link: link,
+                        link: link,
                         mainImg: mainImg,
                     }
                     page.push(obj);
