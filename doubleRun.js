@@ -122,7 +122,7 @@ let double = async (arrSecondRounds) => {
                     let specs = document.querySelector('div.product-card-top__specs').innerText;
                     let price = document.querySelector('div.product-buy__price').innerText;
                     let description = document.querySelector('div.product-card-description-text').innerText;
-                    //let link = arrSecondRound[counter];
+                    let link = window.location.href;
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
 
                     //let a = divs.querySelector('div.product-card-description-text');
