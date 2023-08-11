@@ -17,7 +17,7 @@ puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
 //let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
 
-let ret=async () => {
+(async () => {
     let flag = 2;
     let res = [];
     let counter = 26;
@@ -85,7 +85,7 @@ let ret=async () => {
 
 
 //})();
-};
+})();
 
 
 
@@ -166,13 +166,3 @@ let double = async (arrSecondRounds) => {
 
 
 
-
-(async () => {
-    let arrSecondRound = ['https://www.dns-shop.ru/product/e85a7fbcf8c1c823/141-noutbuk-irbis-nb248-cernyj/',
-        'https://www.dns-shop.ru/product/a9069bce37c6ed20/141-noutbuk-dexp-aquilon-serebristyj/',
-        'https://www.dns-shop.ru/product/e259ba0deda12ff2/14-noutbuk-irbis-nb257-seryj/',
-        'https://www.dns-shop.ru/product/9e7bf670f0052065/14-noutbuk-irbis-nb283-seryj/',
-        'https://www.dns-shop.ru/product/5b988b0337c5ed20/141-noutbuk-dexp-aquilon-serebristyj/'];
-
-   await double(arrSecondRound);
-})();
