@@ -14,13 +14,13 @@ puppeteer.use(StealthPlugin())
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
-let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
-//let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
+//let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
+let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
 
 (async () => {
     let flag = 2;
     let res = [];
-    let counter = 26;
+    let counter = 1;
 
     let browser = await puppeteer.launch({
         headless: false,
@@ -57,8 +57,8 @@ let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
                 }, {waitUntil: 'load'});
 
                 res = res.concat(html);
-                counter++
-                console.log('length = ' + html.length)
+                counter++;
+                console.log('length = ' + html.length);
             }).catch(e => {
                 flag--;
                 console.log('FALSE = ' + flag);
