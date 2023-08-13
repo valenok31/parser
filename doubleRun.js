@@ -1,15 +1,9 @@
-//require('./secondRound')
-
-//const userAgent = require('user-agents');
 const randomUseragent = require('random-useragent');
-//const fs = require('fs');
 const puppeteer = require('puppeteer-extra');
 const XLSX = require('xlsx');
-
 // Add stealth plugin and use defaults (all tricks to hide puppeteer usage)
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
-
 // Add adblocker plugin to block all ads and trackers (saves bandwidth)
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
@@ -34,11 +28,8 @@ let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
         width: 1400, height: 900
     })
 
-
     while (!!flag) {
         await page.goto(`${link}${counter}`);
-
-        // await page.waitForSelector('a.catalog-product__image-link')
         await page.waitForSelector('a.catalog-product__image-link', {timeout: 5000})
             .then(async () => {
 
@@ -63,11 +54,6 @@ let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
                 flag--;
                 console.log('FALSE = ' + flag);
             });
-        //let maxCounters6 = document.querySelectorAll('li.pagination-widget__page');
-        //let maxCounter = +maxCounters6[maxCounters6.length-1].dataset.pageNumber;
-        //console.log(maxCounter);
-
-
     }
 
     let binaryWS = XLSX.utils.json_to_sheet(res);
@@ -76,15 +62,8 @@ let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
     XLSX.writeFile(wb, 'DNS_shop.xlsx');
 
     await browser.close()
-
     console.log(res);
-
-
    await double(res);
-
-
-
-//})();
 })();
 
 
@@ -110,8 +89,6 @@ let double = async (arrSecondRounds) => {
     })
     while (!!flag) {
         await page.goto(`${arrSecondRound[counter]}`);
-        // let tiser = document.querySelector('div.product-card-description-text').innerText;
-        //console.log(tiser);
         await page.waitForSelector('div.product-card-description-text', {timeout: 15000})
             .then(async () => {
                 console.log('SUCCESS');
@@ -125,8 +102,6 @@ let double = async (arrSecondRounds) => {
                     let link = window.location.href;
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
 
-                    //let a = divs.querySelector('div.product-card-description-text');
-                    //let title = divs.innerText;
                     let obj = {
                         name: name,
                         specs: specs,
@@ -140,15 +115,11 @@ let double = async (arrSecondRounds) => {
                     return page;
                 }, {waitUntil: 'load'});
                 res = res.concat(html);
-                //res.push(html);
                 counter++;
-                //console.log(res)
                 if (arrSecondRound.length == counter || counter == 10) {
                     flag = 0
                 }
-
             }).catch(e => {
-                //flag--;
                 console.log('FALSE = ' + flag);
             });
     }
