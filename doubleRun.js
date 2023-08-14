@@ -9,7 +9,8 @@ const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
 //let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
-let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
+//let link = 'https://www.dns-shop.ru/catalog/86bcb70a1543b316/payalnye-feny/?p=';
+let link = 'https://www.dns-shop.ru/catalog/17aa00d516404e77/nabory-ruchnogo-instrumenta/?p=';
 
 (async () => {
     let flag = 2;
