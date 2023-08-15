@@ -13,6 +13,7 @@ puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 let link = 'https://www.dns-shop.ru/catalog/17aa00d516404e77/nabory-ruchnogo-instrumenta/?p=';
 
 (async () => {
+    let start = Date.now();
     let flag = 2;
     let res = [];
     let counter = 1;
@@ -63,7 +64,8 @@ let link = 'https://www.dns-shop.ru/catalog/17aa00d516404e77/nabory-ruchnogo-ins
     XLSX.writeFile(wb, 'DNS_shop.xlsx');
 
     await browser.close()
-    console.log(res);
+    let end = Date.now();
+    console.log(end - start);
    await double(res);
 })();
 
@@ -117,7 +119,7 @@ let double = async (arrSecondRounds) => {
                 }, {waitUntil: 'load'});
                 res = res.concat(html);
                 counter++;
-                if (arrSecondRound.length == counter || counter == 10) {
+                if (arrSecondRound.length == counter) {
                     flag = 0
                 }
             }).catch(e => {
