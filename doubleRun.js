@@ -8,8 +8,9 @@ puppeteer.use(StealthPlugin())
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
-//let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
-let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perexodniki/?p=';
+//let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perexodniki/?p=';
+let link = 'https://www.dns-shop.ru/catalog/recipe/70785d98de658b54/opticeskie-kabeli/?p=';
+
 //let link = 'https://www.detmir.ru/catalog/index/name/myagkye/page/';
 
 
@@ -18,7 +19,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perex
     let start = Date.now();
     let flag = 2;
     let res = [];
-    let counter = 0;
+    let counter = 1;
     let slowMo = 0;
 
     let browser = await puppeteer.launch({
@@ -46,14 +47,6 @@ let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perex
         console.log('== NEXT ==');
     });
 
- /*   function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      }
-      console.log("меняем регион");
-      sleep(10000).then(() => { console.log("Next"); });*/
-   // let element = document.querySelector('span.iT');
-   // console.log(element.innerText)
-    //await element.click(element);
 
     while (!!flag) {
         await page.goto(`${link}${counter}`);
@@ -79,7 +72,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perex
                 res = res.concat(html);
                 counter++;
                 console.log('SUCCESS / ' + counter + ' / ' + html.length);
-                if (counter>5){flag=false}
+                //if (counter>5){flag=false}
             }).catch(e => {
                 flag--;
                 console.log('== FALSE ==');
@@ -169,11 +162,14 @@ let double_dns = async (arrSecondRounds) => {
                     let Manufacturer_country = document.querySelector('div.product-characteristics-content').childNodes[0]?.childNodes[2]?.childNodes[1].innerText;
                     let Warranty_period = document.querySelector('div.product-characteristics-content').childNodes[0]?.childNodes[1]?.childNodes[1].innerText;
                     let Length = document.querySelector('div.product-characteristics-content').childNodes[3]?.childNodes[1]?.childNodes[1].innerText.slice(0,-2);
-                    if(Length=='н'){Length='нет'}
+                    if(Length=='н'){Length=''}
                     //if(Length!='нет'){Length=Length.slice(0,-2)}
                     let Annotation = document.querySelector('div.product-card-description-text').innerText;
                     //*let link = window.location.href;
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
+                    let remains = document.querySelector('div.order-avail-wrap').innerText;
+
+                    let Interface_version = document.querySelector('div.product-characteristics-content').childNodes[4]?.childNodes[1]?.childNodes[1].innerText;
 
 
 
@@ -237,7 +233,7 @@ let double_dns = async (arrSecondRounds) => {
                         Type_of_twisted_pair:'',
                         Category_of_patch_cord_and_twisted_pair:'',
                         Number_of_veins:'',
-                        Interface_version:'',
+                        Interface_version:'', //'HDMI '+Interface_version,
                         Connector1:'',
                         Connector2:'',
                         Connector_type1:'',
@@ -255,6 +251,7 @@ let double_dns = async (arrSecondRounds) => {
                         Number_of_factory_packages:1,
                         Mistake:'',
                         warning:'',
+                        remains:remains,
                     }
                     page.push(obj);
 
@@ -271,9 +268,10 @@ let double_dns = async (arrSecondRounds) => {
                 XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
                 XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
 
-
-                console.log('SUCCESS / ' + counter + '/' + totalElements);
                 console.log(html);
+                console.log('SUCCESS / ' + counter + '/' + totalElements);
+                
+
             }).catch(e => {
                 console.log('== FALSE ==');
             });
