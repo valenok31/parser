@@ -18,7 +18,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perex
     let start = Date.now();
     let flag = 2;
     let res = [];
-    let counter = 10;
+    let counter = 0;
     let slowMo = 0;
 
     let browser = await puppeteer.launch({
@@ -79,7 +79,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perex
                 res = res.concat(html);
                 counter++;
                 console.log('SUCCESS / ' + counter + ' / ' + html.length);
-                //if (counter>10){flag=false}
+                if (counter>5){flag=false}
             }).catch(e => {
                 flag--;
                 console.log('== FALSE ==');
@@ -99,15 +99,14 @@ let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perex
 })();
 
 
-
-
+/*
 let res = [
 'https://www.dns-shop.ru/product/33f3b66102a83332/kabel-soedinitelnyj-dexp-displayport---displayport-18-m/',
 'https://www.dns-shop.ru/product/906a6a41f9923332/kabel-soedinitelnyj-ugreen-displayport---dvi-d-2-m/',
 'https://www.dns-shop.ru/product/2b9bdb25f98a3332/kabel-soedinitelnyj-ugreen-displayport---vga-15-m/',
 'https://www.dns-shop.ru/product/3f86de3ffb2b3332/kabel-soedinitelnyj-ugreen-hdmi---dvi-d-5-m/',
 ]
-
+*/
 
 
 
@@ -123,7 +122,7 @@ let double_dns = async (arrSecondRounds) => {
 
     let browser = await puppeteer.launch({
         headless: false,
-        //slowMo: 100,
+        slowMo: 100,
         //devtools: true
     })
 
@@ -151,23 +150,53 @@ let double_dns = async (arrSecondRounds) => {
         await page.goto(`${arrSecondRound[counter].href}characteristics/`);
 
         await page.waitForSelector('div.product-card-description-text', {timeout: 15000})
+        //await page.waitForSelector('img.product-images-slider__img', {timeout: 15000})
             .then(async () => {
 
                 let html = await page.evaluate(async () => {
+                    //let child = document.querySelector('div.product-characteristics-content').childNodes;
                     let page = [];
                     let name = document.querySelector('a.product-card-tabs__product-title').innerText;
                     //*let specs = document.querySelector('div.product-card-top__specs').innerText;
-                    let price = document.querySelector('div.product-buy__price').innerText;
-                    let article = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[3]?.childNodes[1].innerText;
+                    let price = document.querySelector('div.product-buy__price').innerText.slice(0,-2);
+                    let article = document.querySelector('div.product-card-top__code').innerText;
+                    article=article.slice(12);
+                    let Part_number = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[3]?.childNodes[1].innerText;
                     let brand = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[2]?.childNodes[1].innerText;
                     let model_name = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[1]?.childNodes[1].innerText;
                     let product_color = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[4]?.childNodes[1].innerText;
+                    if(!product_color){product_color=Part_number, Part_number=''}else{Part_number=Part_number.slice(1,-1)};
                     let Manufacturer_country = document.querySelector('div.product-characteristics-content').childNodes[0]?.childNodes[2]?.childNodes[1].innerText;
                     let Warranty_period = document.querySelector('div.product-characteristics-content').childNodes[0]?.childNodes[1]?.childNodes[1].innerText;
-                    let Length = document.querySelector('div.product-characteristics-content').childNodes[3]?.childNodes[1]?.childNodes[1].innerText;
-                    //*let description = document.querySelector('div.product-card-description-text').innerText;
+                    let Length = document.querySelector('div.product-characteristics-content').childNodes[3]?.childNodes[1]?.childNodes[1].innerText.slice(0,-2);
+                    if(Length=='н'){Length='нет'}
+                    //if(Length!='нет'){Length=Length.slice(0,-2)}
+                    let Annotation = document.querySelector('div.product-card-description-text').innerText;
                     //*let link = window.location.href;
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     let obj = {
                         no: '',
@@ -180,29 +209,29 @@ let double_dns = async (arrSecondRounds) => {
                         ozonID: '',
                         commercial_type: 'Видео кабели и переходники',
                         barcode: '',
-                        weight:'',
-                        width:'',
-                        height:'',
-                        length:'',
+                        weight:'1000',
+                        width:'100',
+                        height:'100',
+                        length:'100',
                         main_photo: mainImg,
                         additional_photo: '',
                         photo_360: '',
                         article_photo: '',
-                        brand: brand,
-                        model_name:model_name,  //Какое название??
+                        brand: brand.trim(),
+                        model_name:name,  
                         product_color:product_color,
                         interfaces:'',
                         number_of_output_connectors:'',
-                        Length:Length,
+                        Length:Length.trim(),
                         Units_in_one_product:'',
                         Type:'Кабель-переходник (адаптер)', //Какой тип??
                         Equipment:'',
                         Compatibility:'',
                         Rich_JSON_content:'',
                         Series_name:'',
-                        Annotation:'',
+                        Annotation:Annotation,
                         Keywords:'',
-                        Part_number:'',
+                        Part_number: Part_number,
                         HS_Code_electronics:'',
                         Appointment:'',
                         Type_of_twisted_pair:'',
@@ -223,7 +252,7 @@ let double_dns = async (arrSecondRounds) => {
                         Product_weight:'',
                         Manufacturer_country:Manufacturer_country,
                         Warranty_period:Warranty_period,
-                        Number_of_factory_packages:'',
+                        Number_of_factory_packages:1,
                         Mistake:'',
                         warning:'',
                     }
@@ -233,10 +262,18 @@ let double_dns = async (arrSecondRounds) => {
                 }, {waitUntil: 'load'});
                 res = res.concat(html);
                 counter++;
-                if (arrSecondRound.length == counter || counter == 10) {
+                if (arrSecondRound.length == counter) {
                     flag = 0
                 }
+
+                let binaryWS = XLSX.utils.json_to_sheet(res);
+                let wb = XLSX.utils.book_new()
+                XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
+                XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
+
+
                 console.log('SUCCESS / ' + counter + '/' + totalElements);
+                console.log(html);
             }).catch(e => {
                 console.log('== FALSE ==');
             });
@@ -252,6 +289,14 @@ let double_dns = async (arrSecondRounds) => {
     let end = Date.now();
     console.log((end - start)/1000);
 };
+
+
+
+
+
+
+
+
 
 let double = async (arrSecondRounds) => {
     let start = Date.now();
