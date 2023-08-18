@@ -8,12 +8,9 @@ puppeteer.use(StealthPlugin())
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
-//let link = 'https://www.dns-shop.ru/catalog/17a8f91c16404e77/videokabeli-i-perexodniki/?p=';
-let link = 'https://www.dns-shop.ru/catalog/recipe/70785d98de658b54/opticeskie-kabeli/?p=';
-
-//let link = 'https://www.detmir.ru/catalog/index/name/myagkye/page/';
 
 
+let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
 
 (async () => {
     let start = Date.now();
@@ -36,23 +33,23 @@ let link = 'https://www.dns-shop.ru/catalog/recipe/70785d98de658b54/opticeskie-k
     await page.goto(`https://www.dns-shop.ru`);
 
     await page.waitForSelector('span.iT2', {timeout: 20000})
-    .then(async () => {
-        let html = await page.evaluate(async () => {
-            let divs = document.querySelector('span.iT').innerText;
-            return divs;
-        }, {waitUntil: 'load'});  
-        
-    })
-    .catch(e => {
-        console.log('== NEXT ==');
-    });
+        .then(async () => {
+            let html = await page.evaluate(async () => {
+                let divs = document.querySelector('span.iT').innerText;
+                return divs;
+            }, {waitUntil: 'load'});
+
+        })
+        .catch(e => {
+            console.log('== NEXT ==');
+        });
 
 
     while (!!flag) {
         await page.goto(`${link}${counter}`);
 
         //await page.waitForSelector('section.H_1', {timeout: 5000})
-        await page.waitForSelector('div.ui-button-widget', {timeout: 5000})
+        await page.waitForSelector('div.ui-button-widget', {timeout: 2000})
             .then(async () => {
 
                 let html = await page.evaluate(async () => {
@@ -87,21 +84,9 @@ let link = 'https://www.dns-shop.ru/catalog/recipe/70785d98de658b54/opticeskie-k
     await browser.close()
     let end = Date.now();
     console.log(res.length + 'шт за ' + (end - start)/1000 + ' сек');
-   await double_dns(res);
-   //await double(res);
+    await double_dns(res);
+    //await double(res);
 })();
-
-
-/*
-let res = [
-'https://www.dns-shop.ru/product/33f3b66102a83332/kabel-soedinitelnyj-dexp-displayport---displayport-18-m/',
-'https://www.dns-shop.ru/product/906a6a41f9923332/kabel-soedinitelnyj-ugreen-displayport---dvi-d-2-m/',
-'https://www.dns-shop.ru/product/2b9bdb25f98a3332/kabel-soedinitelnyj-ugreen-displayport---vga-15-m/',
-'https://www.dns-shop.ru/product/3f86de3ffb2b3332/kabel-soedinitelnyj-ugreen-hdmi---dvi-d-5-m/',
-]
-*/
-
-
 
 
 
@@ -143,25 +128,34 @@ let double_dns = async (arrSecondRounds) => {
         await page.goto(`${arrSecondRound[counter].href}characteristics/`);
 
         await page.waitForSelector('div.product-card-description-text', {timeout: 15000})
-        //await page.waitForSelector('img.product-images-slider__img', {timeout: 15000})
+            //await page.waitForSelector('img.product-images-slider__img', {timeout: 15000})
             .then(async () => {
 
                 let html = await page.evaluate(async () => {
-                    //let child = document.querySelector('div.product-characteristics-content').childNodes;
+                    let child = document.querySelector('div.product-characteristics-content').childNodes;
                     let page = [];
+
+                    let article = document.querySelector('div.product-card-top__code').innerText;
+                    article=article.slice(12);
                     let name = document.querySelector('a.product-card-tabs__product-title').innerText;
                     //*let specs = document.querySelector('div.product-card-top__specs').innerText;
                     let price = document.querySelector('div.product-buy__price').innerText.slice(0,-2);
-                    let article = document.querySelector('div.product-card-top__code').innerText;
-                    article=article.slice(12);
-                    let Part_number = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[3]?.childNodes[1].innerText;
-                    let brand = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[2]?.childNodes[1].innerText;
-                    let model_name = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[1]?.childNodes[1].innerText;
-                    let product_color = document.querySelector('div.product-characteristics-content').childNodes[1]?.childNodes[4]?.childNodes[1].innerText;
-                    if(!product_color){product_color=Part_number, Part_number=''}else{Part_number=Part_number.slice(1,-1)};
-                    let Manufacturer_country = document.querySelector('div.product-characteristics-content').childNodes[0]?.childNodes[2]?.childNodes[1].innerText;
-                    let Warranty_period = document.querySelector('div.product-characteristics-content').childNodes[0]?.childNodes[1]?.childNodes[1].innerText;
-                    let Length = document.querySelector('div.product-characteristics-content').childNodes[3]?.childNodes[1]?.childNodes[1].innerText.slice(0,-2);
+
+                    let Part_number = '';
+                    let Type_of_twisted_pair = child[2]?.childNodes[1]?.childNodes[1].innerText;
+                    let Category_of_patch_cord_and_twisted_pair = child[2]?.childNodes[3]?.childNodes[1].innerText;
+                    let Number_of_veins = child[2]?.childNodes[2]?.childNodes[1].innerText;
+                    let Conductor_Materials = child[2]?.childNodes[6]?.childNodes[1].innerText;
+                    let outer_shell_of_cable = child[3]?.childNodes[5]?.childNodes[1].innerText;
+
+
+
+                    let brand = document.querySelector('img.product-card-top__brand-image').alt;
+                    let model_name = child[1]?.childNodes[1]?.childNodes[1].innerText;
+                    let product_color = child[1]?.childNodes[3]?.childNodes[1].innerText;
+                    let Manufacturer_country = child[0]?.childNodes[2]?.childNodes[1].innerText;
+                    let Warranty_period = child[0]?.childNodes[1]?.childNodes[1].innerText;
+                    let Length = child[3]?.childNodes[1]?.childNodes[1].innerText.slice(0,-2);
                     if(Length=='н'){Length=''}
                     //if(Length!='нет'){Length=Length.slice(0,-2)}
                     let Annotation = document.querySelector('div.product-card-description-text').innerText;
@@ -169,7 +163,15 @@ let double_dns = async (arrSecondRounds) => {
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
                     let remains = document.querySelector('div.order-avail-wrap').innerText;
 
-                    let Interface_version = document.querySelector('div.product-characteristics-content').childNodes[4]?.childNodes[1]?.childNodes[1].innerText;
+                    //let Interface_version = document.querySelector('div.product-characteristics-content').childNodes[4]?.childNodes[1]?.childNodes[1].innerText;
+
+
+
+
+
+
+
+
 
 
 
@@ -203,7 +205,7 @@ let double_dns = async (arrSecondRounds) => {
                         nds: 'Не облагается',
                         enable_promotion: '',
                         ozonID: '',
-                        commercial_type: 'Видео кабели и переходники',
+                        commercial_type: 'Кабель для интернет-соединения',
                         barcode: '',
                         weight:'1000',
                         width:'100',
@@ -214,13 +216,13 @@ let double_dns = async (arrSecondRounds) => {
                         photo_360: '',
                         article_photo: '',
                         brand: brand.trim(),
-                        model_name:name,  
+                        model_name:name,
                         product_color:product_color,
                         interfaces:'',
                         number_of_output_connectors:'',
                         Length:Length.trim(),
                         Units_in_one_product:'',
-                        Type:'Кабель-переходник (адаптер)', //Какой тип??
+                        Type:'Кабель для интернет-соединения', //Какой тип??
                         Equipment:'',
                         Compatibility:'',
                         Rich_JSON_content:'',
@@ -230,9 +232,9 @@ let double_dns = async (arrSecondRounds) => {
                         Part_number: Part_number,
                         HS_Code_electronics:'',
                         Appointment:'',
-                        Type_of_twisted_pair:'',
-                        Category_of_patch_cord_and_twisted_pair:'',
-                        Number_of_veins:'',
+                        Type_of_twisted_pair:Type_of_twisted_pair,
+                        Category_of_patch_cord_and_twisted_pair:Category_of_patch_cord_and_twisted_pair,
+                        Number_of_veins:Number_of_veins,
                         Interface_version:'', //'HDMI '+Interface_version,
                         Connector1:'',
                         Connector2:'',
@@ -240,8 +242,8 @@ let double_dns = async (arrSecondRounds) => {
                         Connector_type2:'',
                         Max_current:'',
                         Fast_Charging_standard:'',
-                        Conductor_Materials:'',
-                        outer_shell_of_cable:'',
+                        Conductor_Materials:Conductor_Materials,
+                        outer_shell_of_cable:outer_shell_of_cable,
                         Technological_features:'',
                         Design_features:'',
                         Sizes:'',
@@ -265,12 +267,12 @@ let double_dns = async (arrSecondRounds) => {
 
                 let binaryWS = XLSX.utils.json_to_sheet(res);
                 let wb = XLSX.utils.book_new()
-                XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
+                XLSX.utils.book_append_sheet(wb, binaryWS, 'Kabel')
                 XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
 
                 console.log(html);
                 console.log('SUCCESS / ' + counter + '/' + totalElements);
-                
+
 
             }).catch(e => {
                 console.log('== FALSE ==');
@@ -279,7 +281,7 @@ let double_dns = async (arrSecondRounds) => {
 
     let binaryWS = XLSX.utils.json_to_sheet(res);
     let wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
+    XLSX.utils.book_append_sheet(wb, binaryWS, 'Kabel')
     XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
 
     console.log(res)
