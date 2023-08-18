@@ -10,6 +10,7 @@ puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
 
 
+
 let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
 
 (async () => {
