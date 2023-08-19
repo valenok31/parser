@@ -9,15 +9,13 @@ const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
 
-
-
-let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
+let link = 'https://www.dns-shop.ru/catalog/17a9ed0b16404e77/patch-kordy/?p=';
 
 (async () => {
     let start = Date.now();
     let flag = 2;
     let res = [];
-    let counter = 1;
+    let counter = 10;
     let slowMo = 0;
 
     let browser = await puppeteer.launch({
@@ -78,18 +76,19 @@ let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
             });
     }
 
-/*    let binaryWS = XLSX.utils.json_to_sheet(res);
-    let wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
-    XLSX.writeFile(wb, 'DNS_shop.xlsx');*/
+
+    /*
+        let binaryWS = XLSX.utils.json_to_sheet(res);
+        let wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
+        XLSX.writeFile(wb, 'DNS_shop.xlsx');*/
 
     await browser.close()
     let end = Date.now();
-    console.log(res.length + 'шт за ' + (end - start)/1000 + ' сек');
+    console.log(res.length + 'шт за ' + (end - start) / 1000 + ' сек');
     await double_dns(res);
     //await double(res);
 })();
-
 
 
 let double_dns = async (arrSecondRounds) => {
@@ -140,18 +139,17 @@ let double_dns = async (arrSecondRounds) => {
                     let page = [];
 
                     let article = document.querySelector('div.product-card-top__code').innerText;
-                    article=article.slice(12);
+                    article = article.slice(12);
                     let name = document.querySelector('a.product-card-tabs__product-title').innerText;
                     //*let specs = document.querySelector('div.product-card-top__specs').innerText;
-                    let price = document.querySelector('div.product-buy__price').innerText.slice(0,-2);
+                    let price = document.querySelector('div.product-buy__price').innerText.slice(0, -2);
 
                     let Part_number = '';
                     let Type_of_twisted_pair = child[2]?.childNodes[1]?.childNodes[1].innerText;
                     let Category_of_patch_cord_and_twisted_pair = child[2]?.childNodes[3]?.childNodes[1].innerText;
                     let Number_of_veins = child[2]?.childNodes[2]?.childNodes[1].innerText;
                     let Conductor_Materials = child[2]?.childNodes[6]?.childNodes[1].innerText;
-                    let outer_shell_of_cable = child[3]?.childNodes[5]?.childNodes[1].innerText;
-
+                    let outer_shell_of_cable = child[3]?.childNodes[1]?.childNodes[1].innerText;
 
 
                     let brand = document.querySelector('img.product-card-top__brand-image').alt;
@@ -159,106 +157,107 @@ let double_dns = async (arrSecondRounds) => {
                     let product_color = child[1]?.childNodes[3]?.childNodes[1].innerText;
                     let Manufacturer_country = child[0]?.childNodes[2]?.childNodes[1].innerText;
                     let Warranty_period = child[0]?.childNodes[1]?.childNodes[1].innerText;
-                    let Length = child[3]?.childNodes[1]?.childNodes[1].innerText.slice(0,-2);
-                    if(Length=='н'){Length=''}
+                    let Length = child[3]?.childNodes[1]?.childNodes[1].innerText.slice(0, -2);
+                    if (Length == 'н') {
+                        Length = ''
+                    }
                     //if(Length!='нет'){Length=Length.slice(0,-2)}
                     let Annotation = document.querySelector('div.product-card-description-text').innerText;
                     //*let link = window.location.href;
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
                     let remains = document.querySelector('div.order-avail-wrap').innerText;
-
+                    let type = 'Кабель для интернет-соединения';
                     //let Interface_version = document.querySelector('div.product-characteristics-content').childNodes[4]?.childNodes[1]?.childNodes[1].innerText;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    let obj = {
-                        no: '',
-                        article: article,
-                        name: name,
-                        price: price,
-                        price_before_discount: '',
-                        nds: 'Не облагается',
-                        enable_promotion: '',
-                        ozonID: '',
-                        commercial_type: type,
-                        barcode: '',
-                        weight:'1000',
-                        width:'100',
-                        height:'100',
-                        length:'100',
-                        main_photo: mainImg,
-                        additional_photo: '',
-                        photo_360: '',
-                        article_photo: '',
-                        brand: brand.trim(),
-                        model_name:name,
-                        product_color:product_color,
-                        interfaces:'',
-                        number_of_output_connectors:'',
-                        Length:Length.trim(),
-                        Units_in_one_product:'',
-                        Type:type, //Какой тип??
-                        Equipment:'',
-                        Compatibility:'',
-                        Rich_JSON_content:'',
-                        Series_name:'',
-                        Annotation:Annotation,
-                        Keywords:'',
-                        Part_number: Part_number,
-                        HS_Code_electronics:'',
-                        Appointment:'',
-                        Type_of_twisted_pair:Type_of_twisted_pair,
-                        Category_of_patch_cord_and_twisted_pair:Category_of_patch_cord_and_twisted_pair,
-                        Number_of_veins:Number_of_veins,
-                        Interface_version:'', //'HDMI '+Interface_version,
-                        Connector1:'',
-                        Connector2:'',
-                        Connector_type1:'',
-                        Connector_type2:'',
-                        Max_current:'',
-                        Fast_Charging_standard:'',
-                        Conductor_Materials:Conductor_Materials,
-                        outer_shell_of_cable:outer_shell_of_cable,
-                        Technological_features:'',
-                        Design_features:'',
-                        Sizes:'',
-                        Product_weight:'',
-                        Manufacturer_country:Manufacturer_country,
-                        Warranty_period:Warranty_period,
-                        Number_of_factory_packages:1,
-                        Mistake:'',
-                        warning:'',
-                        remains:remains,
+                    /*                 let   a_title = child[1]?.childNodes[1]?.childNodes[0].innerText;
+                                     let   a_value = child[1]?.childNodes[1]?.childNodes[1].innerText;
+                                     let   b_title = child[1]?.childNodes[2]?.childNodes[0].innerText;
+                                     let   b_value = child[1]?.childNodes[2]?.childNodes[1].innerText;
+                                     let   c_title = child[1]?.childNodes[3]?.childNodes[0].innerText;
+                                     let   c_value = child[1]?.childNodes[3]?.childNodes[1].innerText;
+                                     let   d_title = child[1]?.childNodes[4]?.childNodes[0].innerText;
+                                     let   d_value = child[1]?.childNodes[4]?.childNodes[1].innerText;
+                                     let   e_title = child[1]?.childNodes[5]?.childNodes[0].innerText;
+                                     let   e_value = child[1]?.childNodes[5]?.childNodes[1].innerText;
+                                        let obj = {
+                                            [a_title]: a_value,
+                                            [b_title]: b_value,
+                                            [c_title]: c_value,
+                                            [d_title]: d_value,
+                                            [e_title]: e_value,
+                                        }*/
+                   child = document.querySelector('div.product-characteristics-content').childNodes;
+                    let obj = {};
+                    for (let k = 0; k < child.length; k++) {
+                        for (let i = 1; i < child[k].childNodes.length; i++) {
+                            let title = child[k]?.childNodes[i]?.childNodes[0].innerText.trim();
+                            obj[title] = child[k]?.childNodes[i]?.childNodes[1].innerText.trim();
+                        }
                     }
+
+
+                    /* let obj = {
+                         no: '',
+                         article: article,
+                         name: name,
+                         price: price,
+                         price_before_discount: '',
+                         nds: 'Не облагается',
+                         enable_promotion: '',
+                         ozonID: '',
+                         commercial_type: type,
+                         barcode: '',
+                         weight: '1000',
+                         width: '100',
+                         height: '100',
+                         length: '100',
+                         main_photo: mainImg,
+                         additional_photo: '',
+                         photo_360: '',
+                         article_photo: '',
+                         brand: brand.trim(),
+                         model_name: name,
+                         product_color: product_color,
+                         interfaces: '',
+                         number_of_output_connectors: '',
+                         Length: Length.trim(),
+                         Units_in_one_product: '',
+                         Type: type, //Какой тип??
+                         Equipment: '',
+                         Compatibility: '',
+                         Rich_JSON_content: '',
+                         Series_name: '',
+                         Annotation: Annotation,
+                         Keywords: '',
+                         Part_number: Part_number,
+                         HS_Code_electronics: '',
+                         Appointment: '',
+                         Type_of_twisted_pair: Type_of_twisted_pair,
+                         Category_of_patch_cord_and_twisted_pair: Category_of_patch_cord_and_twisted_pair,
+                         Number_of_veins: Number_of_veins,
+                         Interface_version: '', //'HDMI '+Interface_version,
+                         Connector1: '',
+                         Connector2: '',
+                         Connector_type1: '',
+                         Connector_type2: '',
+                         Max_current: '',
+                         Fast_Charging_standard: '',
+                         Conductor_Materials: Conductor_Materials,
+                         outer_shell_of_cable: outer_shell_of_cable,
+                         Technological_features: '',
+                         Design_features: '',
+                         Sizes: '',
+                         Product_weight: '',
+                         Manufacturer_country: Manufacturer_country,
+                         Warranty_period: Warranty_period,
+                         Number_of_factory_packages: 1,
+                         Mistake: '',
+                         warning: '',
+                         remains: remains,
+                     }*/
+
+
                     page.push(obj);
 
                     return page;
@@ -283,6 +282,7 @@ let double_dns = async (arrSecondRounds) => {
             });
     }
 
+
     let binaryWS = XLSX.utils.json_to_sheet(res);
     let wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, binaryWS, '1')
@@ -291,7 +291,7 @@ let double_dns = async (arrSecondRounds) => {
     console.log(res)
     await browser.close()
     let end = Date.now();
-    console.log((end - start)/1000);
+    console.log((end - start) / 1000);
 };
 
 
