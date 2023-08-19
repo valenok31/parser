@@ -68,8 +68,9 @@ let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
                 }, {waitUntil: 'load'});
 
                 res = res.concat(html);
-                counter++;
+
                 console.log('SUCCESS / ' + counter + ' / ' + html.length);
+                counter++;
                 //if (counter>5){flag=false}
             }).catch(e => {
                 flag--;
@@ -77,10 +78,10 @@ let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
             });
     }
 
-    let binaryWS = XLSX.utils.json_to_sheet(res);
+/*    let binaryWS = XLSX.utils.json_to_sheet(res);
     let wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
-    XLSX.writeFile(wb, 'DNS_shop.xlsx');
+    XLSX.writeFile(wb, 'DNS_shop.xlsx');*/
 
     await browser.close()
     let end = Date.now();
@@ -98,6 +99,8 @@ let double_dns = async (arrSecondRounds) => {
     let counter = 0;
     let arrSecondRound = arrSecondRounds;
     let totalElements = arrSecondRound.length;
+
+    let type = 'Кабель для интернет-соединения';
 
     let browser = await puppeteer.launch({
         headless: false,
@@ -206,7 +209,7 @@ let double_dns = async (arrSecondRounds) => {
                         nds: 'Не облагается',
                         enable_promotion: '',
                         ozonID: '',
-                        commercial_type: 'Кабель для интернет-соединения',
+                        commercial_type: type,
                         barcode: '',
                         weight:'1000',
                         width:'100',
@@ -223,7 +226,7 @@ let double_dns = async (arrSecondRounds) => {
                         number_of_output_connectors:'',
                         Length:Length.trim(),
                         Units_in_one_product:'',
-                        Type:'Кабель для интернет-соединения', //Какой тип??
+                        Type:type, //Какой тип??
                         Equipment:'',
                         Compatibility:'',
                         Rich_JSON_content:'',
@@ -268,10 +271,10 @@ let double_dns = async (arrSecondRounds) => {
 
                 let binaryWS = XLSX.utils.json_to_sheet(res);
                 let wb = XLSX.utils.book_new()
-                XLSX.utils.book_append_sheet(wb, binaryWS, 'Kabel')
-                XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
+                XLSX.utils.book_append_sheet(wb, binaryWS, '1')
+                XLSX.writeFile(wb, `${type}_${totalElements}.xlsx`);
 
-                console.log(html);
+                //console.log(html);
                 console.log('SUCCESS / ' + counter + '/' + totalElements);
 
 
@@ -282,8 +285,8 @@ let double_dns = async (arrSecondRounds) => {
 
     let binaryWS = XLSX.utils.json_to_sheet(res);
     let wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, binaryWS, 'Kabel')
-    XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
+    XLSX.utils.book_append_sheet(wb, binaryWS, '1')
+    XLSX.writeFile(wb, `${type}_${totalElements}.xlsx`);
 
     console.log(res)
     await browser.close()
@@ -292,79 +295,3 @@ let double_dns = async (arrSecondRounds) => {
 };
 
 
-
-
-
-
-
-
-
-let double = async (arrSecondRounds) => {
-    let start = Date.now();
-    let flag = 4;
-    let res = [];
-    let counter = 0;
-    let arrSecondRound = arrSecondRounds;
-    let totalElements = arrSecondRound.length;
-
-
-    let browser = await puppeteer.launch({
-        headless: false,
-        //slowMo: 100,
-        //devtools: true
-    })
-
-    let page = await browser.newPage();
-    await page.setUserAgent(randomUseragent.getRandom())
-    await page.setViewport({
-        width: 1400, height: 900
-    })
-    while (!!flag) {
-        await page.goto(`${arrSecondRound[counter]}`);
-        await page.waitForSelector('div.product-card-description-text', {timeout: 15000})
-            .then(async () => {
-
-                let html = await page.evaluate(async () => {
-                    let page = [];
-                    let name = document.querySelector('h1.product-card-top__title').innerText;
-                    let specs = document.querySelector('div.product-card-top__specs').innerText;
-                    let price = document.querySelector('div.product-buy__price').innerText;
-                    let description = document.querySelector('div.product-card-description-text').innerText;
-                    let link = window.location.href;
-                    let mainImg = document.querySelector('img.product-images-slider__main-img').src;
-
-                    let obj = {
-                        name: name,
-                        specs: specs,
-                        price: price,
-                        description: description,
-                        link: link,
-                        mainImg: mainImg,
-                    }
-                    page.push(obj);
-
-                    return page;
-                }, {waitUntil: 'load'});
-                res = res.concat(html);
-                counter++;
-                if (arrSecondRound.length == counter || counter == 10) {
-                    flag = 0
-                }
-                console.log('SUCCESS / ' + counter + '/' + totalElements);
-            }).catch(e => {
-                console.log('== FALSE ==');
-            });
-    }
-
-    let binaryWS = XLSX.utils.json_to_sheet(res);
-    let wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, binaryWS, 'Noutbuki')
-    XLSX.writeFile(wb, 'DNS_shop_advanced.xlsx');
-
-    console.log(res)
-    await browser.close()
-    let end = Date.now();
-    console.log((end - start)/1000);
-};
-
-//double_dns(res);
