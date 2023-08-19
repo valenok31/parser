@@ -15,7 +15,7 @@ let link = 'https://www.dns-shop.ru/catalog/17a9ed0b16404e77/patch-kordy/?p=';
     let start = Date.now();
     let flag = 2;
     let res = [];
-    let counter = 10;
+    let counter = 1;
     let slowMo = 0;
 
     let browser = await puppeteer.launch({
@@ -169,30 +169,25 @@ let double_dns = async (arrSecondRounds) => {
                     let type = 'Кабель для интернет-соединения';
                     //let Interface_version = document.querySelector('div.product-characteristics-content').childNodes[4]?.childNodes[1]?.childNodes[1].innerText;
 
-
-                    /*                 let   a_title = child[1]?.childNodes[1]?.childNodes[0].innerText;
-                                     let   a_value = child[1]?.childNodes[1]?.childNodes[1].innerText;
-                                     let   b_title = child[1]?.childNodes[2]?.childNodes[0].innerText;
-                                     let   b_value = child[1]?.childNodes[2]?.childNodes[1].innerText;
-                                     let   c_title = child[1]?.childNodes[3]?.childNodes[0].innerText;
-                                     let   c_value = child[1]?.childNodes[3]?.childNodes[1].innerText;
-                                     let   d_title = child[1]?.childNodes[4]?.childNodes[0].innerText;
-                                     let   d_value = child[1]?.childNodes[4]?.childNodes[1].innerText;
-                                     let   e_title = child[1]?.childNodes[5]?.childNodes[0].innerText;
-                                     let   e_value = child[1]?.childNodes[5]?.childNodes[1].innerText;
-                                        let obj = {
-                                            [a_title]: a_value,
-                                            [b_title]: b_value,
-                                            [c_title]: c_value,
-                                            [d_title]: d_value,
-                                            [e_title]: e_value,
-                                        }*/
                    child = document.querySelector('div.product-characteristics-content').childNodes;
-                    let obj = {};
+                    let obj = {
+                        'Артикул':article,
+                        'Название':name,
+                        'Цена':price,
+                        'Бренд':brand,
+                        'Аннотация':Annotation,
+                        'Фото':mainImg,
+                        'Остатки':remains,
+                    };
+
                     for (let k = 0; k < child.length; k++) {
                         for (let i = 1; i < child[k].childNodes.length; i++) {
                             let title = child[k]?.childNodes[i]?.childNodes[0].innerText.trim();
-                            obj[title] = child[k]?.childNodes[i]?.childNodes[1].innerText.trim();
+                            let value_child = child[k]?.childNodes[i]?.childNodes[1].innerText.trim();
+                            if(title == 'Длина'){title = 'Длина, м'; value_child = value_child.slice(0, -2)}
+                            if(title == 'Код производителя'){value_child = value_child.slice(1, -1)}
+                            if(value_child == 'нет'){value_child = ''}
+                            obj[title] = value_child;
                         }
                     }
 
