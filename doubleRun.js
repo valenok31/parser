@@ -9,7 +9,7 @@ const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
 
-let link = 'https://www.dns-shop.ru/catalog/17a9ed0b16404e77/patch-kordy/?p=';
+let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
 
 (async () => {
     let start = Date.now();
@@ -99,7 +99,7 @@ let double_dns = async (arrSecondRounds) => {
     let arrSecondRound = arrSecondRounds;
     let totalElements = arrSecondRound.length;
 
-    let type = 'Кабель для интернет-соединения';
+    let type = 'Витая пара';
 
     let browser = await puppeteer.launch({
         headless: false,
@@ -166,91 +166,126 @@ let double_dns = async (arrSecondRounds) => {
                     //*let link = window.location.href;
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
                     let remains = document.querySelector('div.order-avail-wrap').innerText;
-                    let type = 'Кабель для интернет-соединения';
+                    //let type = 'Кабель для интернет-соединения';
                     //let Interface_version = document.querySelector('div.product-characteristics-content').childNodes[4]?.childNodes[1]?.childNodes[1].innerText;
 
-                   child = document.querySelector('div.product-characteristics-content').childNodes;
+                    child = document.querySelector('div.product-characteristics-content').childNodes;
                     let obj = {
-                        'Артикул':article,
-                        'Название':name,
-                        'Цена':price,
-                        'Бренд':brand,
-                        'Аннотация':Annotation,
-                        'Фото':mainImg,
-                        'Остатки':remains,
+                        '№':'',
+                        'Артикул': article,
+                        'Название': name,
+                        'Цена': price,
+/*                        'Цена до скидки': '',
+                        'НДС': 'Не облагается',
+                        'Включить продвижение': '',
+                        'Ozon ID': '',
+                        'Коммерческий тип': '',
+                        'Штрихкод': '',
+                        'Вес в упаковке': '',
+                        'Ширина упаковки': '',
+                        'Высота упаковки': '',
+                        'Длина упаковки': '',*/
+                        'Ссылка на главное фото': mainImg,
+/*                        'Ссылки на дополнительные фото': '',
+                        'Ссылки на фото 360': '',
+                        'Артикул фото': '',*/
+                        'Бренд': brand,
+                        'Аннотация': Annotation,
+                        'Остатки': remains,
                     };
 
                     for (let k = 0; k < child.length; k++) {
                         for (let i = 1; i < child[k].childNodes.length; i++) {
                             let title = child[k]?.childNodes[i]?.childNodes[0].innerText.trim();
                             let value_child = child[k]?.childNodes[i]?.childNodes[1].innerText.trim();
-                            if(title == 'Длина'){title = 'Длина, м'; value_child = value_child.slice(0, -2)}
-                            if(title == 'Код производителя'){value_child = value_child.slice(1, -1)}
-                            if(value_child == 'нет'){value_child = ''}
+                            if (title == 'Длина') {
+                                title = 'Длина, м';
+                                value_child = value_child.slice(0, -2)
+                            }
+                            if (title == 'Код производителя') {
+                                value_child = value_child.slice(1, -1)
+                            }
+                            if (title == 'Гарантия продавца / производителя') {
+                                title = 'Гарантия продавца'
+                            }
+                            if (value_child == 'нет') {
+                                value_child = ''
+                            }
+
                             obj[title] = value_child;
                         }
                     }
 
+/* let template_xlsx = ["№", "Артикул* ", "Название товара ", "Цена, руб.* ", "Цена до скидки, руб. ", "НДС, %* ", "Включить продвижение ", "Ozon ID ",
+"Коммерческий тип* ", "Штрихкод (Серийный номер / EAN) ", "Вес в упаковке, г* ", "Ширина упаковки, мм* ", "Высота упаковки, мм* ", "Длина упаковки, мм* ",
+"Ссылка на главное фото* ", "Ссылки на дополнительные фото ", "Ссылки на фото 360 ", "Артикул фото ", "Бренд* ", "Название модели (для объединения в одну карточку)* ", "Цвет товара* ", "Название цвета ", "Размер коврика ", "Тип* ", "Комплектация ", "Страна-изготовитель ", "Rich-контент JSON ", "Название серии ", "Аннотация ", "Образец цвета ", "Ключевые слова ", "Партномер ", "Код ТН ВЭД электроника ", "Название модели для шаблона наименования ", "Размеры, мм ", "Длина, см ", "Ширина, см ", "Толщина, мм ", "Материал поверхности ", "Материал подложки ", "Характеристика покрытия ", "Подставка под запястье ", "Для игрового компьютера ", "Особенности коврика ", "Вес товара, г ", "Признак 18+ ", "Гарантийный срок ", "Количество заводских упаковок ", "Ошибка ", "Предупреждение "]
+                    let template = {}
 
-                    /* let obj = {
-                         no: '',
-                         article: article,
-                         name: name,
-                         price: price,
-                         price_before_discount: '',
-                         nds: 'Не облагается',
-                         enable_promotion: '',
-                         ozonID: '',
-                         commercial_type: type,
-                         barcode: '',
-                         weight: '1000',
-                         width: '100',
-                         height: '100',
-                         length: '100',
-                         main_photo: mainImg,
-                         additional_photo: '',
-                         photo_360: '',
-                         article_photo: '',
-                         brand: brand.trim(),
-                         model_name: name,
-                         product_color: product_color,
-                         interfaces: '',
-                         number_of_output_connectors: '',
-                         Length: Length.trim(),
-                         Units_in_one_product: '',
-                         Type: type, //Какой тип??
-                         Equipment: '',
-                         Compatibility: '',
-                         Rich_JSON_content: '',
-                         Series_name: '',
-                         Annotation: Annotation,
-                         Keywords: '',
-                         Part_number: Part_number,
-                         HS_Code_electronics: '',
-                         Appointment: '',
-                         Type_of_twisted_pair: Type_of_twisted_pair,
-                         Category_of_patch_cord_and_twisted_pair: Category_of_patch_cord_and_twisted_pair,
-                         Number_of_veins: Number_of_veins,
-                         Interface_version: '', //'HDMI '+Interface_version,
-                         Connector1: '',
-                         Connector2: '',
-                         Connector_type1: '',
-                         Connector_type2: '',
-                         Max_current: '',
-                         Fast_Charging_standard: '',
-                         Conductor_Materials: Conductor_Materials,
-                         outer_shell_of_cable: outer_shell_of_cable,
-                         Technological_features: '',
-                         Design_features: '',
-                         Sizes: '',
-                         Product_weight: '',
-                         Manufacturer_country: Manufacturer_country,
-                         Warranty_period: Warranty_period,
-                         Number_of_factory_packages: 1,
-                         Mistake: '',
-                         warning: '',
-                         remains: remains,
-                     }*/
+                    for (let k = 0; k < template_xlsx.length; k++) {
+                        template[template_xlsx[k]] = '';
+                    }*/
+
+
+
+                   /* let template = {
+                        no: '',
+                        article: article,
+                        name: name,
+                        price: price,
+                        price_before_discount: '',
+                        nds: 'Не облагается',
+                        enable_promotion: '',
+                        ozonID: '',
+                        commercial_type: type,
+                        barcode: '',
+                        weight: '1000',
+                        width: '100',
+                        height: '100',
+                        length: '100',
+                        main_photo: mainImg,
+                        additional_photo: '',
+                        photo_360: '',
+                        article_photo: '',
+                        brand: brand.trim(),
+                        model_name: name,
+                        product_color: product_color,
+                        interfaces: '',
+                        number_of_output_connectors: '',
+                        Length: Length.trim(),
+                        Units_in_one_product: '',
+                        Type: type, //Какой тип??
+                        Equipment: '',
+                        Compatibility: '',
+                        Rich_JSON_content: '',
+                        Series_name: '',
+                        Annotation: Annotation,
+                        Keywords: '',
+                        Part_number: Part_number,
+                        HS_Code_electronics: '',
+                        Appointment: '',
+                        Type_of_twisted_pair: Type_of_twisted_pair,
+                        Category_of_patch_cord_and_twisted_pair: Category_of_patch_cord_and_twisted_pair,
+                        Number_of_veins: Number_of_veins,
+                        Interface_version: '', //'HDMI '+Interface_version,
+                        Connector1: '',
+                        Connector2: '',
+                        Connector_type1: '',
+                        Connector_type2: '',
+                        Max_current: '',
+                        Fast_Charging_standard: '',
+                        Conductor_Materials: Conductor_Materials,
+                        outer_shell_of_cable: outer_shell_of_cable,
+                        Technological_features: '',
+                        Design_features: '',
+                        Sizes: '',
+                        Product_weight: '',
+                        Manufacturer_country: Manufacturer_country,
+                        Warranty_period: Warranty_period,
+                        Number_of_factory_packages: 1,
+                        Mistake: '',
+                        warning: '',
+                        remains: remains,
+                    }*/
 
 
                     page.push(obj);
