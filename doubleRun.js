@@ -9,13 +9,13 @@ const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 puppeteer.use(AdblockerPlugin({blockTrackers: true}))
 
 
-let link = 'https://www.dns-shop.ru/catalog/17a9ecd616404e77/vitaya-para/?p=';
+let link = 'https://www.dns-shop.ru/catalog/17a892f816404e77/noutbuki/?p=';
 
 (async () => {
     let start = Date.now();
     let flag = 2;
     let res = [];
-    let counter = 1;
+    let counter = 27;
     let slowMo = 0;
 
     let browser = await puppeteer.launch({
@@ -99,7 +99,8 @@ let double_dns = async (arrSecondRounds) => {
     let arrSecondRound = arrSecondRounds;
     let totalElements = arrSecondRound.length;
 
-    let type = 'Витая пара';
+    let type = 'Ноутбуки';
+    //let type = document.querySelector('h1.title').innerText;
 
     let browser = await puppeteer.launch({
         headless: false,
