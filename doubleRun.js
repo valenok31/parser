@@ -204,10 +204,7 @@ let double_dns = async (arrSecondRounds) => {
                         'Количество заводских упаковок': '1',//+
                         'Ошибка': '',
                         'Предупреждение': '',
-
                         'Остатки': remains,
-
-
                     };
                     let rk = 1;
                     for (let k = 0; k < child.length; k++) {
@@ -222,12 +219,10 @@ let double_dns = async (arrSecondRounds) => {
                                 title = 'Длина шнура, м';
                                 value_child = value_child.slice(0, -2)
                             }
-
                             if (title == 'Раскладка клавиатуры') {
                                 title = title + rk;
                                 rk = 2
                             }
-
                             if (title == 'Подача холодного воздуха' && value_child == 'есть') {
                                 obj['Дополнительные режимы'] = 'Холодный воздух';
                             }
@@ -261,10 +256,7 @@ let double_dns = async (arrSecondRounds) => {
                             obj[title] = value_child;
                         }
                     }
-
-
                     page.push(obj);
-
                     return page;
                 }, {waitUntil: 'load'});
                 res = res.concat(html);
