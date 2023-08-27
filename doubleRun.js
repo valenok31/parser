@@ -131,11 +131,6 @@ let double_dns = async (arrSecondRounds) => {
                     let name2 = document.querySelector('div.product-card-top__specs').innerText.slice(0, -10)
                     let price = document.querySelector('div.product-buy__price').innerText.split('₽')[0].slice(0, -1);
                     let brand = document.querySelector('img.product-card-top__brand-image').alt;
-                    let Length = child[3]?.childNodes[1]?.childNodes[1].innerText.slice(0, -2);
-                    if (Length == 'н') {
-                        Length = ''
-                    }
-
                     let Annotation = document.querySelector('div.product-card-description-text').innerText;
                     let mainImg = document.querySelector('img.product-images-slider__main-img').src;
                     let remains = document.querySelector('div.order-avail-wrap').innerText;
